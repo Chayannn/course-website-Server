@@ -1,5 +1,6 @@
 import express from "express";
 import { config } from "dotenv";
+import ErrorMiddleware from "./middlewares/Error.js";
 
 config({
   path: "./config/config.env",
@@ -12,6 +13,9 @@ import course from "./routes/courseRoutes.js";
 app.use("/api/v1", course);
 
 import users from "./routes/userRoutes.js";
+
 app.use("/api/v1", users);
 
 export default app;
+
+app.use(ErrorMiddleware)
