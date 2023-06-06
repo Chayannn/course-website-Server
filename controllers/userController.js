@@ -71,3 +71,42 @@ export const getMyProfile = catchAsyncError(async (req, res, next) => {
     user,
   });
 });
+export const changePassword = catchAsyncError(async (req, res, next) => {
+  const { oldPassword, newPassword } = req.body;
+
+  if (!oldPassword || !newPassword)
+    return next(new ErrorHandler("Please Enter All Fields", 400));
+
+  const user = await User.findById(req.user._id).select("+password");
+
+  const isMatch = await user.comparePassword(oldPassword);
+
+  if (!isMatch) return next(new ErrorHandler("Incorrect Old Password", 400));
+
+  user.password = newPassword;
+
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Password Changed Successfully",
+  });
+});
+
+export const updateProfile = catchAsyncError(async (req, res, next) => {
+  const { name, email } = req.body;
+
+  const user = await User.findById(req.user._id);
+
+  if (name) return (user.name = name);
+  if (email) return (user.email = email);
+
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Profile Updated Successfully",
+  });
+});
+
+export const updateProfilePicture = () => {};
