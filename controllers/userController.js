@@ -131,7 +131,7 @@ export const forgetPassword = catchAsyncError(async (req, res, next) => {
 
   const message = `Click on the link to reset password ${url}.If you have not requested then please ignore`;
   // Send Token via email
-  await sendEmail(user.email, "CourseBundler Reset Password");
+  await sendEmail(user.email, "CourseBundler Reset Password Link");
 
   res.status(200).json({
     success: true,
