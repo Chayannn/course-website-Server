@@ -2,6 +2,8 @@ import { catchAsyncError } from "../middlewares/catchAsyncError.js";
 import ErrorHandler from "../utils/errorHandler.js";
 import { User } from "../models/user.js";
 import { sendToken } from "../utils/sendToken.js";
+import { sendEmail } from "../utils/sendEmail.js";
+import crypto from "crypto";
 
 export const register = catchAsyncError(async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -109,4 +111,59 @@ export const updateProfile = catchAsyncError(async (req, res, next) => {
   });
 });
 
-export const updateProfilePicture = () => {};
+export const updateProfilePicture = (req, res, next) => {
+  res.status(200).json({
+    success: true,
+    message: "Profile Pic Updated Successfully",
+  });
+};
+
+export const forgetPassword = catchAsyncError(async (req, res, next) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) return next(new ErrorHandler("User not found", 400));
+
+  const resetToken = await user.getResetToken();
+
+  const url = `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`;
+
+  const message = `Click on the link to reset password ${url}.If you have not requested then please ignore`;
+  // Send Token via email
+  await sendEmail(user.email, "CourseBundler Reset Password");
+
+  res.status(200).json({
+    success: true,
+    message: `Rest token has been sent to ${user.email}`,
+  });
+});
+export const resetPassword = async (req, res, next) => {
+  const { token } = req.params;
+
+  const resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(token)
+    .digest("hex");
+
+  const user = User.findOne({
+    resetPasswordToken,
+    resetPasswordExpire: {
+      $gt: Date.now(),
+    },
+  });
+  if (!user)
+    return next(new ErrorHandler("Token is invalid or has been expired"));
+
+  user.password = req.body.password;
+  user.resetPasswordExpire = undefined;
+  user.resetPasswordToken = undefined;
+
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Password Changed Successfully",
+    token,
+  });
+};

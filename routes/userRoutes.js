@@ -1,10 +1,12 @@
 import express from "express";
 import {
   changePassword,
+  forgetPassword,
   getMyProfile,
   login,
   logout,
   register,
+  resetPassword,
   updateProfile,
   updateProfilePicture,
 } from "../controllers/userController.js";
@@ -29,5 +31,9 @@ router.route("/updateprofile").put(isAuthenticated, updateProfile);
 router
   .route("/updateprofilepicture")
   .put(isAuthenticated, updateProfilePicture);
+// Forget Password
+router.route("/forgetpassword").post(forgetPassword);
+// Reset Password
+router.route("/resetpassword/:token").put(resetPassword);
 
 export default router;
