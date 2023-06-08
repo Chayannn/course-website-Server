@@ -1,6 +1,7 @@
 import { createTransport } from "nodemailer";
+import { catchAsyncError } from "../middlewares/catchAsyncError.js";
 
-export const sendEmail = async (to, subject, text) => {
+export const sendEmail = catchAsyncError(async (to, subject, text) => {
   const transporter = createTransport({
     host: process.env.SMTP_HOST,
     port: process.env.SMTP_PORT,
@@ -13,6 +14,6 @@ export const sendEmail = async (to, subject, text) => {
   await transporter.sendMail({
     to,
     subject,
-    text,   
+    text,
   });
-};
+});

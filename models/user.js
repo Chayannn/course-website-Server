@@ -69,15 +69,9 @@ schema.pre("save", async function (next) {
 });
 
 schema.methods.getJWTToken = function () {
-  return jwt.sign(
-    {
-      _id: this._id,
-    },
-    process.env.JWT_SECRET,
-    {
-      expiresIn: "15d",
-    }
-  );
+  return jwt.sign({ _id: this._id }, process.env.JWT_SECRET, {
+    expiresIn: "15d",
+  });
 };
 schema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
@@ -95,4 +89,4 @@ schema.methods.getResetToken = async function () {
 
   return resetToken;
 };
-export const User = mongoose.model("user", schema);
+export const User = mongoose.model("User", schema);

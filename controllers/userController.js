@@ -56,7 +56,7 @@ export const login = catchAsyncError(async (req, res, next) => {
 export const logout = catchAsyncError(async (req, res, next) => {
   res
     .status(200)
-    .cookie("token", "", {
+    .cookie("token", null, {
       expires: new Date(Date.now()),
     })
     .json({
@@ -111,12 +111,12 @@ export const updateProfile = catchAsyncError(async (req, res, next) => {
   });
 });
 
-export const updateProfilePicture = (req, res, next) => {
+export const updateProfilePicture = catchAsyncError((req, res, next) => {
   res.status(200).json({
     success: true,
     message: "Profile Pic Updated Successfully",
   });
-};
+});
 
 export const forgetPassword = catchAsyncError(async (req, res, next) => {
   const { email } = req.body;
@@ -127,11 +127,13 @@ export const forgetPassword = catchAsyncError(async (req, res, next) => {
 
   const resetToken = await user.getResetToken();
 
+  await user.save();
+
   const url = `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`;
 
   const message = `Click on the link to reset password ${url}.If you have not requested then please ignore`;
   // Send Token via email
-  await sendEmail(user.email, "CourseBundler Reset Password Link");
+  await sendEmail(user.email, "CourseBundler Reset Password Link",message);
 
   res.status(200).json({
     success: true,
@@ -153,7 +155,7 @@ export const resetPassword = async (req, res, next) => {
     },
   });
   if (!user)
-    return next(new ErrorHandler("token is invalid or has been expired"));
+    return next(new ErrorHandler("token is invalid or has been expired",401));
 
   user.password = req.body.password;
   user.resetPasswordExpire = undefined;
