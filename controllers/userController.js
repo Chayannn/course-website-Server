@@ -133,14 +133,15 @@ export const forgetPassword = catchAsyncError(async (req, res, next) => {
 
   const message = `Click on the link to reset password ${url}.If you have not requested then please ignore`;
   // Send Token via email
-  await sendEmail(user.email, "CourseBundler Reset Password Link",message);
+  await sendEmail(user.email, "CourseBundler Reset Password Link", message);
 
   res.status(200).json({
     success: true,
     message: `Rest token has been sent to ${user.email}`,
   });
 });
-export const resetPassword = async (req, res, next) => {
+
+export const resetPassword = catchAsyncError(async (req, res, next) => {
   const { token } = req.params;
 
   const resetPasswordToken = crypto
@@ -148,24 +149,24 @@ export const resetPassword = async (req, res, next) => {
     .update(token)
     .digest("hex");
 
-  const user = User.findOne({
+  const user = await User.findOne({
     resetPasswordToken,
     resetPasswordExpire: {
       $gt: Date.now(),
     },
   });
+
   if (!user)
-    return next(new ErrorHandler("token is invalid or has been expired",401));
+    return next(new ErrorHandler("Token is invalid or has been expired", 401));
 
   user.password = req.body.password;
-  user.resetPasswordExpire = undefined;
   user.resetPasswordToken = undefined;
+  user.resetPasswordExpire = undefined;
 
   await user.save();
 
   res.status(200).json({
     success: true,
     message: "Password Changed Successfully",
-    token,
   });
-};
+});
