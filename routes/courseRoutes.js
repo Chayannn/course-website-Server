@@ -1,11 +1,11 @@
 import express from "express";
 import {
-  addLectures,
+  addLecture,
   createCourse,
   deleteCourse,
   deleteLecture,
   getAllCourses,
-  getCourselectures,
+  getCourseLectures,
 } from "../controllers/courseController.js";
 
 import singleUpload from "../middlewares/multer.js";
@@ -24,8 +24,8 @@ router
 // Add Lecture,Delete Course,Get Course Details
 router
   .route("/course/:id")
-  .get(isAuthenticated, getCourselectures)
-  .post(singleUpload, authorizeAdmin, addLectures)
+  .get(isAuthenticated, getCourseLectures)
+  .post(singleUpload, authorizeAdmin, addLecture)
   .delete(isAuthenticated, authorizeAdmin, deleteCourse);
 
 // Delte lecture
