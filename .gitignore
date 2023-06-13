@@ -6,7 +6,7 @@
 .pnp.js
 
 #file
-/config.env
+
 
 # testing
 /coverage
@@ -20,6 +20,9 @@
 .env.development.local
 .env.test.local
 .env.production.local
+
+# machine-specific configuration files
+config.env
 
 
 npm-debug.log*
