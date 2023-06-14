@@ -4,7 +4,7 @@ import ErrorMiddleware from "./middlewares/Error.js";
 import cookieparser from "cookie-parser";
 
 config({
-  path: "./config/config.env",
+  path: "./config.env",
 });
 
 const app = express();
@@ -20,11 +20,12 @@ app.use(cookieparser());
 
 // Importing & Using Routes
 import course from "./routes/courseRoutes.js";
-app.use("/api/v1", course);
-
 import users from "./routes/userRoutes.js";
+import payment from "./routes/paymentRoutes.js";
 
+app.use("/api/v1", course);
 app.use("/api/v1", users);
+app.use("/api/v1", payment);
 
 export default app;
 
