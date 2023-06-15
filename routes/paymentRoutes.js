@@ -15,6 +15,9 @@ router.route("/subscribe").get(isAuthenticated, buySubscription);
 router.route("/paymentverification").post(isAuthenticated, paymentVerification);
 
 // Get Razor Pay key
-
 router.route("/razorpaykey").get(getRazorPayKey);
+
+// Cancel Subscription
+
+router.route('/subscribe/cancel').delete(isAuthenticated,)
 export default router;
