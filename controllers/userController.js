@@ -248,7 +248,7 @@ export const updateUserRole = catchAsyncError(async (req, res, next) => {
   if (user.role === "user") user.role = "admin";
   else user.role = user;
 
-  user.save();
+  await user.save();
 
   res.status(200).json({
     success: true,
@@ -264,7 +264,7 @@ export const deleteUser = catchAsyncError(async (req, res, next) => {
 
   // Cancel Subscription
 
-  user.remove();
+  await user.remove();
 
   res.status(200).json({
     success: true,
@@ -279,7 +279,7 @@ export const deleteMyProfile = catchAsyncError(async (req, res, next) => {
 
   // Cancel Subscription
 
-  user.remove();
+ await user.remove();
 
   res
     .status(200)
