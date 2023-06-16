@@ -22,10 +22,12 @@ app.use(cookieparser());
 import course from "./routes/courseRoutes.js";
 import users from "./routes/userRoutes.js";
 import payment from "./routes/paymentRoutes.js";
+import other from "./routes/otherRoutes.js";
 
 app.use("/api/v1", course);
 app.use("/api/v1", users);
 app.use("/api/v1", payment);
+app.use("/api/v1", other);
 
 export default app;
 
