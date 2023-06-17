@@ -7,6 +7,7 @@ import { sendEmail } from "../utils/sendEmail.js";
 import crypto from "crypto";
 import cloudinary from "cloudinary";
 import getDataUri from "../utils/dataUri.js";
+import { Stats } from "../models/Stats.js";
 
 export const register = catchAsyncError(async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -279,7 +280,7 @@ export const deleteMyProfile = catchAsyncError(async (req, res, next) => {
 
   // Cancel Subscription
 
- await user.remove();
+  await user.remove();
 
   res
     .status(200)
@@ -290,4 +291,16 @@ export const deleteMyProfile = catchAsyncError(async (req, res, next) => {
       success: true,
       message: "User Deleted Successfully",
     });
+});
+
+User.watch().on("change", async () => {
+  const stats = await Stats.find({}).sort({ createdAt: "desc" }).limit(1);
+
+  const subscription = await User.find({ "subscription.status": "active" });
+
+  stats[0].users = await User.countDocuments();
+  stats[0].subscription = subscription.length;
+  stats[0].createdAt = new Date(Date.now());
+
+  await stats.save()
 });
