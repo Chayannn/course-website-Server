@@ -153,13 +153,13 @@ Course.watch().on("change", async () => {
 
   const courses = await Course.find({});
 
-  let totalviews = 0;
+  let totalViews = 0;
 
   for (let i = 0; i < courses.length; i++) {
-    totalviews += courses[i].views;
+    totalViews += courses[i].views;
   }
-  stats[0].views = totalviews;
-  stats[0].createdAt = new Date(Date.now())
+  stats[0].views = totalViews;
+  stats[0].createdAt = new Date(Date.now());
 
-  await stats[0].save()
+  await stats[0].save();
 });

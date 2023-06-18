@@ -24,13 +24,16 @@ export const contact = catchAsyncError(async (req, res, next) => {
 });
 
 export const courseRequest = catchAsyncError(async (req, res, next) => {
-  const { name, email, message } = req.body;
 
+  const { name, email, course } = req.body;
+
+  if (!name || !email || !course)
+    return next(new ErrorHandler("All fields are mandatory", 400));
+    
   const to = process.env.MY_MAIL;
-
   const subject = "Request for a course on CourseBundler";
 
-  const text = `Hi👋,I am ${name} and My email is ${email}. \n${message}`;
+  const text = `Hi👋,I am ${name} and My email is ${email}. \n${course}`;
 
   await sendEmail(to, subject, text);
 
@@ -50,7 +53,7 @@ export const getDashboardStats = catchAsyncError(async (req, res, next) => {
   }
   const requiredSize = 12 - stats.length;
 
-  for (let i = 0; i < requiredSize.length; i++) {
+  for (let i = 0; i < requiredSize; i++) {
     statsData.unshift({
       users: 0,
       subscription: 0,
