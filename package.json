@@ -4,8 +4,12 @@
   "description": "",
   "type": "module",
   "main": "server.js",
+  "engines": {
+    "node": ">=14.20.1"
+  },
   "scripts": {
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "start": "nodemon server.js"
   },
   "author": "",
   "license": "ISC",

@@ -29,7 +29,7 @@ router
 router
   .route("/course/:id")
   .get(isAuthenticated, authorizeSubscribers, getCourseLectures)
-  .post(singleUpload, authorizeAdmin, addLecture)
+  .post(isAuthenticated, singleUpload, authorizeAdmin, addLecture)
   .delete(isAuthenticated, authorizeAdmin, deleteCourse);
 
 // Delte lecture
