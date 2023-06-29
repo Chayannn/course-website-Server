@@ -1,14 +1,17 @@
 {
   "name": "course-website-server",
-  "version": "69.9.9",
+  "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "server.js",
+  "type": "module",
+  "engines": {
+    "node": ">=14.20.1"
+  },
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js"
   },
-  "author": "",
+  "author": "Chayan",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.0",

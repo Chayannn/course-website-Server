@@ -9,7 +9,6 @@ const schema = new mongoose.Schema({
     type: String,
     required: [true, "Please enter your name"],
   },
-
   email: {
     type: String,
     required: [true, "Please enter your email"],
@@ -20,7 +19,7 @@ const schema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, "Please enter your password"],
-    minLength: [6, "Password must be atleast 6 characters"],
+    minLength: [6, "Password must be at least 6 characters"],
     select: false,
   },
   role: {
@@ -54,10 +53,12 @@ const schema = new mongoose.Schema({
       poster: String,
     },
   ],
+
   createdAt: {
     type: Date,
     default: Date.now,
   },
+
   resetPasswordToken: String,
   resetPasswordExpire: String,
 });
@@ -73,11 +74,12 @@ schema.methods.getJWTToken = function () {
     expiresIn: "15d",
   });
 };
+
 schema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-schema.methods.getResetToken = async function () {
+schema.methods.getResetToken = function () {
   const resetToken = crypto.randomBytes(20).toString("hex");
 
   this.resetPasswordToken = crypto
@@ -89,4 +91,5 @@ schema.methods.getResetToken = async function () {
 
   return resetToken;
 };
+
 export const User = mongoose.model("User", schema);
